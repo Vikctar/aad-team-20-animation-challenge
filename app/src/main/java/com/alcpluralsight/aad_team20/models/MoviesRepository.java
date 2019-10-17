@@ -3,6 +3,7 @@ package com.alcpluralsight.aad_team20.models;
 
 
 
+import com.alcpluralsight.aad_team20.BuildConfig;
 import com.alcpluralsight.aad_team20.genres.GenresResponse;
 import com.alcpluralsight.aad_team20.genres.OnGetGenresCallback;
 import com.alcpluralsight.aad_team20.interfaces.OnGetMovieCallback;
@@ -24,7 +25,6 @@ public class MoviesRepository {
     public static final String UPCOMING = "upcoming";
 
     private static final String TAG = "MoviesRepository";
-    private static final String BASE_URL = "https://api.themoviedb.org/3/";
     private static final String LANGUAGE = "en-US";
 
     private static MoviesRepository repository;
@@ -39,7 +39,7 @@ public class MoviesRepository {
     public static MoviesRepository getInstance() {
         if (repository == null) {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(BASE_URL)
+                    .baseUrl(BuildConfig.URL)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 
