@@ -3,12 +3,15 @@ package com.alcpluralsight.aad_team20.activities;
 import android.animation.Animator;
 import android.animation.AnimatorInflater;
 import android.annotation.SuppressLint;
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
+import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
@@ -40,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     private static final String TAG = "MainActivity";
+    private int resId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,15 +59,8 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         getGenres();
-        int resId = R.anim.layout_animation;
-        LayoutAnimationController animationController = AnimationUtils.loadLayoutAnimation(this,resId);
-        moviesList.setLayoutAnimation(animationController);
-        moviesList.scheduleLayoutAnimation();
-
+        resId = R.anim.layout_animation;
         setupOnScrollListener();
-
-
-
     }
 
     private void setupOnScrollListener() {
@@ -107,8 +104,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSuccess(int page, List<Movie> movies) {
                 if (adapter == null) {
-                    adapter = new MoviesAdapter(movies, movieGenres, callback);
+                    adapter = new MoviesAdapter(movies, movieGenres, callback, MainActivity.this);
                     moviesList.setAdapter(adapter);
+                    runAnimation();
                 } else {
                     if (page == 1) {
                         adapter.clearMovies();
@@ -132,9 +130,17 @@ public class MainActivity extends AppCompatActivity {
         public void onClick(Movie movie) {
             Intent intent = new Intent(MainActivity.this, MovieActivity.class);
             intent.putExtra(MovieActivity.MOVIE_ID, movie.getId());
-            startActivity(intent);
+            ActivityOptions options =
+                    ActivityOptions.makeSceneTransitionAnimation(MainActivity.this);
+            startActivity(intent,options.toBundle());
         }
     };
+
+    private void runAnimation(){
+        final LayoutAnimationController animationController = AnimationUtils.loadLayoutAnimation(getApplicationContext(), resId);
+        moviesList.setLayoutAnimation(animationController);
+        moviesList.scheduleLayoutAnimation();
+    }
 
     private void setTitle() {
         switch (sortBy) {
@@ -157,26 +163,28 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu, menu);
+
+        //Inorder for ObjectAnimator to work the target needs to be cast to an ImageView - petekmunz.
+        ImageView sortImage = (ImageView) menu.findItem(R.id.sort).getActionView();
+        if (sortImage != null) {
+            sortImage.setImageResource(R.drawable.ic_sort);
+        }
+        //Since the target of the animation is now an ImageView, we use an onclick on the view &..
+        //..pass the target view as an argument to rotateMenu() -petekmunz.
+        sortImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                rotateMenu(view);
+                showSortMenu();
+            }
+        });
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.sort:
-                showSortMenu();
-                rotateMenu();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    public void rotateMenu() {
-        Animator animator = AnimatorInflater.loadAnimator(this, R.animator.rotate);
-        animator.setTarget(R.drawable.ic_sort);
+    public void rotateMenu(View view) {
+        Animator animator = AnimatorInflater.loadAnimator(getApplicationContext(), R.animator.rotate);
+        animator.setTarget(view);
         animator.start();
-
     }
 
 
@@ -194,14 +202,17 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.popular:
                         sortBy = MoviesRepository.POPULAR;
                         getMovies(currentPage);
+                        runAnimation();
                         return true;
                     case R.id.top_rated:
                         sortBy = MoviesRepository.TOP_RATED;
                         getMovies(currentPage);
+                        runAnimation();
                         return true;
                     case R.id.upcoming:
                         sortBy = MoviesRepository.UPCOMING;
                         getMovies(currentPage);
+                        runAnimation();
                         return true;
                     default:
                         return false;
