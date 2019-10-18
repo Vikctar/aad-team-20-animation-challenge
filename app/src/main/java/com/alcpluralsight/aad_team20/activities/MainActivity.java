@@ -134,6 +134,11 @@ public class MainActivity extends AppCompatActivity {
             intent.putExtra(MovieActivity.MOVIE_ID, movie.getId());
             startActivity(intent);
         }
+    OnMoviesClickCallback callback = movie -> {
+        Intent intent = new Intent(MainActivity.this, MovieActivity.class);
+        intent.putExtra(MovieActivity.MOVIE_ID, movie.getId());
+        startActivity(intent);
+
     };
 
     private void setTitle() {
@@ -182,30 +187,27 @@ public class MainActivity extends AppCompatActivity {
 
     private void showSortMenu() {
         PopupMenu sortMenu = new PopupMenu(this, findViewById(R.id.sort));
-        sortMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                /*
-                 * Every time we sort, we need to go back to page 1
-                 */
-                currentPage = 1;
+        sortMenu.setOnMenuItemClickListener(item -> {
+            /*
+             * Every time we sort, we need to go back to page 1
+             */
+            currentPage = 1;
 
-                switch (item.getItemId()) {
-                    case R.id.popular:
-                        sortBy = MoviesRepository.POPULAR;
-                        getMovies(currentPage);
-                        return true;
-                    case R.id.top_rated:
-                        sortBy = MoviesRepository.TOP_RATED;
-                        getMovies(currentPage);
-                        return true;
-                    case R.id.upcoming:
-                        sortBy = MoviesRepository.UPCOMING;
-                        getMovies(currentPage);
-                        return true;
-                    default:
-                        return false;
-                }
+            switch (item.getItemId()) {
+                case R.id.popular:
+                    sortBy = MoviesRepository.POPULAR;
+                    getMovies(currentPage);
+                    return true;
+                case R.id.top_rated:
+                    sortBy = MoviesRepository.TOP_RATED;
+                    getMovies(currentPage);
+                    return true;
+                case R.id.upcoming:
+                    sortBy = MoviesRepository.UPCOMING;
+                    getMovies(currentPage);
+                    return true;
+                default:
+                    return false;
             }
         });
         sortMenu.inflate(R.menu.menu_movies_sort);

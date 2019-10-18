@@ -34,7 +34,7 @@ public class MovieActivity extends AppCompatActivity {
 
     public static String MOVIE_ID = "movie_id";
 
-    private static String IMAGE_BASE_URL = "http://image.tmdb.org/t/p/w780";
+    private static String IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w185";
     private static String YOUTUBE_VIDEO_URL = "http://www.youtube.com/watch?v=%s";
     private static String YOUTUBE_THUMBNAIL_URL = "http://img.youtube.com/vi/%s/0.jpg";
 
@@ -131,12 +131,7 @@ public class MovieActivity extends AppCompatActivity {
                     View parent = getLayoutInflater().inflate(R.layout.thumbnail_trailer, movieTrailers, false);
                     ImageView thumbnail = parent.findViewById(R.id.thumbnail);
                     thumbnail.requestLayout();
-                    thumbnail.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            showTrailer(String.format(YOUTUBE_VIDEO_URL, trailer.getKey()));
-                        }
-                    });
+                    thumbnail.setOnClickListener(v -> showTrailer(String.format(YOUTUBE_VIDEO_URL, trailer.getKey())));
                     Glide.with(MovieActivity.this)
                             .load(String.format(YOUTUBE_THUMBNAIL_URL, trailer.getKey()))
                             .apply(RequestOptions.placeholderOf(R.color.colorPrimary).centerCrop())
