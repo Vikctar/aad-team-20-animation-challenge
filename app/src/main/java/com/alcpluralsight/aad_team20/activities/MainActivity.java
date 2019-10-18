@@ -7,8 +7,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
+import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
@@ -56,14 +58,11 @@ public class MainActivity extends AppCompatActivity {
 
         getGenres();
         int resId = R.anim.layout_animation;
-        LayoutAnimationController animationController = AnimationUtils.loadLayoutAnimation(this,resId);
+        LayoutAnimationController animationController = AnimationUtils.loadLayoutAnimation(this, resId);
         moviesList.setLayoutAnimation(animationController);
         moviesList.scheduleLayoutAnimation();
 
         setupOnScrollListener();
-
-
-
     }
 
     private void setupOnScrollListener() {
@@ -157,26 +156,28 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu, menu);
+
+        //Inorder for ObjectAnimator to work the target needs to be cast to an ImageView - petekmunz.
+        ImageView sortImage = (ImageView) menu.findItem(R.id.sort).getActionView();
+        if (sortImage != null) {
+            sortImage.setImageResource(R.drawable.ic_sort);
+        }
+        //Since the target of the animation is now an ImageView, we use an onclick on the view &..
+        //..pass the target view as an argument to rotateMenu() -petekmunz.
+        sortImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                rotateMenu(view);
+                showSortMenu();
+            }
+        });
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.sort:
-                showSortMenu();
-                rotateMenu();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    public void rotateMenu() {
-        Animator animator = AnimatorInflater.loadAnimator(this, R.animator.rotate);
-        animator.setTarget(R.drawable.ic_sort);
+    public void rotateMenu(View view) {
+        Animator animator = AnimatorInflater.loadAnimator(getApplicationContext(), R.animator.rotate);
+        animator.setTarget(view);
         animator.start();
-
     }
 
 
