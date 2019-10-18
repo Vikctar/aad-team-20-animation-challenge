@@ -144,13 +144,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
         }
-
-        OnMoviesClickCallback callback = movie -> {
-            Intent intent = new Intent(MainActivity.this, MovieActivity.class);
-            intent.putExtra(MovieActivity.MOVIE_ID, movie.getId());
-            startActivity(intent);
-
-        };
+    };
 
         private void setTitle() {
             switch (sortBy) {
@@ -224,5 +218,4 @@ public class MainActivity extends AppCompatActivity {
             sortMenu.inflate(R.menu.menu_movies_sort);
             sortMenu.show();
         }
-    };
 }
