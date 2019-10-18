@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     private static final String TAG = "MainActivity";
+    private int resId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,11 +58,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         getGenres();
-        int resId = R.anim.layout_animation;
-        LayoutAnimationController animationController = AnimationUtils.loadLayoutAnimation(this, resId);
-        moviesList.setLayoutAnimation(animationController);
-        moviesList.scheduleLayoutAnimation();
-
+        resId = R.anim.layout_animation;
         setupOnScrollListener();
     }
 
@@ -106,8 +103,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSuccess(int page, List<Movie> movies) {
                 if (adapter == null) {
-                    adapter = new MoviesAdapter(movies, movieGenres, callback);
+                    adapter = new MoviesAdapter(movies, movieGenres, callback, MainActivity.this);
                     moviesList.setAdapter(adapter);
+                    runAnimation();
                 } else {
                     if (page == 1) {
                         adapter.clearMovies();
@@ -134,6 +132,12 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         }
     };
+
+    private void runAnimation(){
+        final LayoutAnimationController animationController = AnimationUtils.loadLayoutAnimation(getApplicationContext(), resId);
+        moviesList.setLayoutAnimation(animationController);
+        moviesList.scheduleLayoutAnimation();
+    }
 
     private void setTitle() {
         switch (sortBy) {
@@ -195,14 +199,17 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.popular:
                         sortBy = MoviesRepository.POPULAR;
                         getMovies(currentPage);
+                        runAnimation();
                         return true;
                     case R.id.top_rated:
                         sortBy = MoviesRepository.TOP_RATED;
                         getMovies(currentPage);
+                        runAnimation();
                         return true;
                     case R.id.upcoming:
                         sortBy = MoviesRepository.UPCOMING;
                         getMovies(currentPage);
+                        runAnimation();
                         return true;
                     default:
                         return false;
