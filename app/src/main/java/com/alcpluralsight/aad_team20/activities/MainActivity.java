@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
     private boolean isFetchingMovies;
     private int currentPage = 1;
     private String sortBy = MoviesRepository.POPULAR;
+    private Toolbar toolbar;
 
 
     private static final String TAG = "MainActivity";
@@ -51,17 +52,21 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        moviesRepository = MoviesRepository.getInstance();
-
-        moviesList = findViewById(R.id.movies_list);
-        moviesList.setLayoutManager(new LinearLayoutManager(this));
-
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        initializations();
         setSupportActionBar(toolbar);
 
         getGenres();
         resId = R.anim.layout_animation;
         setupOnScrollListener();
+    }
+
+    private void initializations() {
+        moviesRepository = MoviesRepository.getInstance();
+
+        moviesList = findViewById(R.id.movies_list);
+        moviesList.setLayoutManager(new LinearLayoutManager(this));
+
+        toolbar = findViewById(R.id.toolbar);
     }
 
     private void setupOnScrollListener() {
