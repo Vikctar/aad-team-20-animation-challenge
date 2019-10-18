@@ -1,3 +1,13 @@
 <resources>
+
     <string name="app_name">AAD-Team20</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+<string name="popular">Popular</string>
+<string name="upcoming">Upcoming</string>
+<string name="top_rated">Top Rated</string>
+<string name="popular_page">Popular Movies</string>
+<string name="top_rated_page">Top Rated</string>
+<string name="upcoming_movies">Upcoming Movies</string>
+<string name="movie_thumbnail">Movie Thumbnail</string>
 </resources>

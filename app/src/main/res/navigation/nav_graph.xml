@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/popularMovieFragment">
+
+    <fragment
+        android:id="@+id/popularMovieFragment"
+        android:name="org.mcdowell.tmdb.fragments.PopularMovieFragment"
+        android:label="Popular"
+        tools:layout="@layout/fragment_popular_movie" />
+    <fragment
+        android:id="@+id/topMovieFragment"
+        android:name="org.mcdowell.tmdb.fragments.TopMovieFragment"
+        android:label="Top Rated"
+        tools:layout="@layout/fragment_top_movie" />
+    <fragment
+        android:id="@+id/upcomingFragment"
+        android:name="org.mcdowell.tmdb.fragments.UpcomingFragment"
+        android:label="Upcoming"
+        tools:layout="@layout/fragment_upcoming" />
+</navigation>
