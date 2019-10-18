@@ -2,10 +2,13 @@ package com.alcpluralsight.aad_team20.activities;
 
 import android.animation.Animator;
 import android.animation.AnimatorInflater;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
@@ -52,7 +55,14 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         getGenres();
+        int resId = R.anim.layout_animation;
+        LayoutAnimationController animationController = AnimationUtils.loadLayoutAnimation(this,resId);
+        moviesList.setLayoutAnimation(animationController);
+        moviesList.scheduleLayoutAnimation();
+
         setupOnScrollListener();
+
+
 
     }
 
