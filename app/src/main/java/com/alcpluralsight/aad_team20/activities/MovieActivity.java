@@ -213,14 +213,12 @@ public class MovieActivity extends AppCompatActivity {
     }
     //set your animation
     public void setAnimation() {
-        if (Build.VERSION.SDK_INT > 20) {
-            Slide slide = new Slide();
-            slide.setSlideEdge(Gravity.LEFT);
-            slide.setDuration(400);
-            slide.setInterpolator(new DecelerateInterpolator());
-            getWindow().setExitTransition(slide);
-            getWindow().setEnterTransition(slide);
-        }
+        //No need for sdk check since our app min is 21 which will guarantee animation will always run -petekmunz.
+        Slide slide = new Slide();
+        slide.setSlideEdge(Gravity.START);
+        slide.setDuration(400);
+        slide.setInterpolator(new DecelerateInterpolator());
+        getWindow().setExitTransition(slide);
+        getWindow().setEnterTransition(slide);
     }
-
 }
