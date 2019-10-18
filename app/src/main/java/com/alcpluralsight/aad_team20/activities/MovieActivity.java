@@ -212,9 +212,8 @@ public class MovieActivity extends AppCompatActivity {
         Toast.makeText(MovieActivity.this, "Please check your internet connection.", Toast.LENGTH_SHORT).show();
     }
     //set your animation
-    public void setAnimation()
-    {
-        if(Build.VERSION.SDK_INT>20) {
+    public void setAnimation() {
+        if (Build.VERSION.SDK_INT > 20) {
             Slide slide = new Slide();
             slide.setSlideEdge(Gravity.LEFT);
             slide.setDuration(400);
@@ -223,4 +222,5 @@ public class MovieActivity extends AppCompatActivity {
             getWindow().setEnterTransition(slide);
         }
     }
+
 }

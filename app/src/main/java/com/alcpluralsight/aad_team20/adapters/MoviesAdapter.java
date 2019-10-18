@@ -1,12 +1,16 @@
 package com.alcpluralsight.aad_team20.adapters;
 
+import android.content.Context;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.alcpluralsight.aad_team20.R;
@@ -25,12 +29,14 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
     private List<Movie> movies;
     private List<Genre> allGenres;
     private OnMoviesClickCallback callback;
+    private Context context;
+    private int lastAnimatedPosition = -1;
 
-    public MoviesAdapter(List<Movie> movies, List<Genre> allGenres, OnMoviesClickCallback callback) {
+    public MoviesAdapter(List<Movie> movies, List<Genre> allGenres, OnMoviesClickCallback callback, Context context) {
         this.movies = movies;
         this.allGenres = allGenres;
         this.callback = callback;
-
+        this.context = context;
     }
 
     @Override
@@ -42,11 +48,23 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
     @Override
     public void onBindViewHolder(MovieViewHolder holder, int position) {
         holder.bind(movies.get(position));
+        if (position > lastAnimatedPosition) {
+            lastAnimatedPosition = position;
+            Animation animation = AnimationUtils.loadAnimation(context, R.anim.item_animation_fall_down);
+            holder.container.setAnimation(animation);
+            animation.start();
+        }
     }
 
     @Override
     public int getItemCount() {
         return movies.size();
+    }
+
+    @Override
+    public void onViewDetachedFromWindow(@NonNull MovieViewHolder holder) {
+        holder.clearAnimation();
+        super.onViewDetachedFromWindow(holder);
     }
 
     public void appendMovies(List<Movie> moviesToAppend) {
@@ -66,9 +84,11 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
         TextView genres;
         ImageView poster;
         Movie movie;
+        View container;
 
         public MovieViewHolder(View itemView) {
             super(itemView);
+            container = itemView;
             releaseDate = itemView.findViewById(R.id.item_movie_release_date);
             title = itemView.findViewById(R.id.item_movie_title);
             rating = itemView.findViewById(R.id.item_movie_rating);
@@ -100,6 +120,10 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
                 }
             }
             return TextUtils.join(", ", movieGenres);
+        }
+
+        public void clearAnimation(){
+            container.clearAnimation();
         }
 
     }
