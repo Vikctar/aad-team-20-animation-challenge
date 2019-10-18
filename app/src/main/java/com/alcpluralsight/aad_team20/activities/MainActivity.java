@@ -1,9 +1,14 @@
 package com.alcpluralsight.aad_team20.activities;
 
+import android.app.ActivityOptions;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.transition.Slide;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
@@ -51,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
 
         getGenres();
         setupOnScrollListener();
+
     }
     private void setupOnScrollListener() {
         final LinearLayoutManager manager = new LinearLayoutManager(this);
@@ -116,7 +122,14 @@ public class MainActivity extends AppCompatActivity {
         public void onClick(Movie movie) {
             Intent intent = new Intent(MainActivity.this, MovieActivity.class);
             intent.putExtra(MovieActivity.MOVIE_ID, movie.getId());
-            startActivity(intent);
+            if(Build.VERSION.SDK_INT>20){
+                ActivityOptions options =
+                        ActivityOptions.makeSceneTransitionAnimation(MainActivity.this);
+                startActivity(intent,options.toBundle());
+            }else {
+                startActivity(intent);
+            }
+
         }
     };
 
