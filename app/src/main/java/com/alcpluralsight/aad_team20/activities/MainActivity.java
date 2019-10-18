@@ -1,5 +1,7 @@
 package com.alcpluralsight.aad_team20.activities;
 
+import android.animation.Animator;
+import android.animation.AnimatorInflater;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -51,7 +53,9 @@ public class MainActivity extends AppCompatActivity {
 
         getGenres();
         setupOnScrollListener();
+
     }
+
     private void setupOnScrollListener() {
         final LinearLayoutManager manager = new LinearLayoutManager(this);
         moviesList.setLayoutManager(manager);
@@ -70,12 +74,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
     private void getGenres() {
         moviesRepository.getGenres(new OnGetGenresCallback() {
             @Override
             public void onSuccess(List<Genre> genres) {
-              movieGenres = genres;
-              getMovies(currentPage);
+                movieGenres = genres;
+                getMovies(currentPage);
             }
 
             @Override
@@ -92,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSuccess(int page, List<Movie> movies) {
                 if (adapter == null) {
-                    adapter = new MoviesAdapter(movies, movieGenres,callback);
+                    adapter = new MoviesAdapter(movies, movieGenres, callback);
                     moviesList.setAdapter(adapter);
                 } else {
                     if (page == 1) {
@@ -111,6 +116,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
     OnMoviesClickCallback callback = new OnMoviesClickCallback() {
         @Override
         public void onClick(Movie movie) {
@@ -140,18 +146,27 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu,menu);
+        getMenuInflater().inflate(R.menu.menu, menu);
         return true;
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.sort:
                 showSortMenu();
+                rotateMenu();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    public void rotateMenu() {
+        Animator animator = AnimatorInflater.loadAnimator(this, R.animator.rotate);
+        animator.setTarget(R.drawable.ic_sort);
+        animator.start();
+
     }
 
 
