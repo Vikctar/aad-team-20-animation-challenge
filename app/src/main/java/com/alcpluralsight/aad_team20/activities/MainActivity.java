@@ -3,6 +3,7 @@ package com.alcpluralsight.aad_team20.activities;
 import android.animation.Animator;
 import android.animation.AnimatorInflater;
 import android.annotation.SuppressLint;
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -129,7 +130,9 @@ public class MainActivity extends AppCompatActivity {
         public void onClick(Movie movie) {
             Intent intent = new Intent(MainActivity.this, MovieActivity.class);
             intent.putExtra(MovieActivity.MOVIE_ID, movie.getId());
-            startActivity(intent);
+            ActivityOptions options =
+                    ActivityOptions.makeSceneTransitionAnimation(MainActivity.this);
+            startActivity(intent,options.toBundle());
         }
     };
 
