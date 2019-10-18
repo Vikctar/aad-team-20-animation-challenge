@@ -1,9 +1,9 @@
 package com.alcpluralsight.aad_team20.activities;
 
+
 import android.animation.Animator;
 import android.animation.AnimatorInflater;
 import android.annotation.SuppressLint;
-
 import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Build;
@@ -67,7 +67,6 @@ public class MainActivity extends AppCompatActivity {
         moviesList.scheduleLayoutAnimation();
 
         setupOnScrollListener();
-
     }
 
     private void setupOnScrollListener() {
@@ -225,5 +224,5 @@ public class MainActivity extends AppCompatActivity {
             sortMenu.inflate(R.menu.menu_movies_sort);
             sortMenu.show();
         }
-    }
+    };
 }
