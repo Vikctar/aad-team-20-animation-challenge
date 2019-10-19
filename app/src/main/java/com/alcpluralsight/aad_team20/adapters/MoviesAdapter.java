@@ -76,6 +76,10 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
         notifyDataSetChanged();
     }
 
+    public Context getContext() {
+        return context;
+    }
+
 
     class MovieViewHolder extends RecyclerView.ViewHolder {
         TextView releaseDate;
@@ -125,6 +129,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
         public void clearAnimation(){
             container.clearAnimation();
         }
+
 
     }
 }
