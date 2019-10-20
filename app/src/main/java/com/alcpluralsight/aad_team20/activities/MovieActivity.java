@@ -6,6 +6,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.transition.Slide;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
@@ -139,7 +140,9 @@ public class MovieActivity extends AppCompatActivity {
                     thumbnail.setOnClickListener(v -> showTrailer(String.format(YOUTUBE_VIDEO_URL, trailer.getKey())));
                     Glide.with(MovieActivity.this)
                             .load(String.format(YOUTUBE_THUMBNAIL_URL, trailer.getKey()))
-                            .apply(RequestOptions.placeholderOf(R.color.colorPrimary).centerCrop())
+                            .apply(RequestOptions.placeholderOf(R.drawable.poster_placeholder)
+                                    .error(R.drawable.error_state)
+                                    .centerCrop())
                             .into(thumbnail);
                     movieTrailers.addView(parent);
                 }
