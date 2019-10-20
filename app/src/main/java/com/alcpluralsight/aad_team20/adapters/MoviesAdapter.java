@@ -50,7 +50,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
         holder.bind(movies.get(position));
         if (position > lastAnimatedPosition) {
             lastAnimatedPosition = position;
-            Animation animation = AnimationUtils.loadAnimation(context, R.anim.item_animation_fall_down);
+            Animation animation = AnimationUtils.loadAnimation(context, R.anim.item_animation_right_left);
             holder.container.setAnimation(animation);
             animation.start();
         }

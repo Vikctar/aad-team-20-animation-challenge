@@ -6,6 +6,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.transition.Slide;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
@@ -139,7 +140,9 @@ public class MovieActivity extends AppCompatActivity {
                     thumbnail.setOnClickListener(v -> showTrailer(String.format(YOUTUBE_VIDEO_URL, trailer.getKey())));
                     Glide.with(MovieActivity.this)
                             .load(String.format(YOUTUBE_THUMBNAIL_URL, trailer.getKey()))
-                            .apply(RequestOptions.placeholderOf(R.color.colorPrimary).centerCrop())
+                            .apply(RequestOptions.placeholderOf(R.drawable.poster_placeholder)
+                                    .error(R.drawable.error_state)
+                                    .centerCrop())
                             .into(thumbnail);
                     movieTrailers.addView(parent);
                 }
@@ -213,14 +216,13 @@ public class MovieActivity extends AppCompatActivity {
     }
     //set your animation
     public void setAnimation() {
-        if (Build.VERSION.SDK_INT > 20) {
-            Slide slide = new Slide();
-            slide.setSlideEdge(Gravity.LEFT);
-            slide.setDuration(400);
-            slide.setInterpolator(new DecelerateInterpolator());
-            getWindow().setExitTransition(slide);
-            getWindow().setEnterTransition(slide);
-        }
+        //No need for sdk check since our app min sdk is 21 which will guarantee animation to always run -petekmunz.
+        Slide slide = new Slide();
+        slide.setSlideEdge(Gravity.START);
+        //Changed duration to 700ms to give time for image to be loaded hence better ux -petekmunz.
+        slide.setDuration(700);
+        slide.setInterpolator(new DecelerateInterpolator());
+        getWindow().setExitTransition(slide);
+        getWindow().setEnterTransition(slide);
     }
-
 }
