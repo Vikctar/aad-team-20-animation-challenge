@@ -45,7 +45,7 @@ public class SplashActivity extends AppCompatActivity {
                 startActivity(intent, options.toBundle());
                 finish();
             }
-        }, 2000);
+        }, 2500);
     }
 
     private void shakeImage(){
