@@ -1,3 +1,9 @@
 <resources>
-    <string name="app_name">AAD-Team20</string>
+    <string name="app_name">MoviesApp</string>
+    <string name="popular">Popular</string>
+    <string name="top_rated">Top Rated</string>
+    <string name="upcoming">Upcoming</string>
+    <string name="need_tips">Need some Tips on the latest Flicks?</string>
+    <string name="we_got_you">We got You!</string>
+    <string name="movie_icon">movie icon</string>
 </resources>
