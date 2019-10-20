@@ -6,9 +6,12 @@ import android.animation.AnimatorInflater;
 import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
+import android.transition.Slide;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
 import android.view.animation.AnimationUtils;
+import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LayoutAnimationController;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
@@ -49,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setAnimation();
 
         initializations();
         setSupportActionBar(toolbar);
@@ -135,7 +139,6 @@ public class MainActivity extends AppCompatActivity {
         ActivityOptions options =
                 ActivityOptions.makeSceneTransitionAnimation(MainActivity.this);
         startActivity(intent, options.toBundle());
-
     };
 
     private void setTitle() {
@@ -221,5 +224,23 @@ public class MainActivity extends AppCompatActivity {
         });
         sortMenu.inflate(R.menu.menu_movies_sort);
         sortMenu.show();
+    }
+
+    private void setAnimation() {
+        //No need for sdk check since our app min sdk is 21 which will guarantee animation to always run -petekmunz.
+        Slide slide = new Slide();
+        slide.setSlideEdge(Gravity.START);
+        slide.setDuration(1300);
+        slide.setInterpolator(new DecelerateInterpolator());
+        getWindow().setEnterTransition(slide);
+    }
+
+    //Default onBack pressed conflicts with animation hence need for custom handling.
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 }
