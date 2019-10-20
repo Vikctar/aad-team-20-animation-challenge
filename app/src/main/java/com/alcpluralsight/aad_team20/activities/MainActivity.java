@@ -5,12 +5,13 @@ import android.animation.Animator;
 import android.animation.AnimatorInflater;
 import android.app.ActivityOptions;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
+import android.transition.Slide;
+import android.view.Gravity;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationUtils;
+import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LayoutAnimationController;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
@@ -51,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setAnimation();
 
         initializations();
         setSupportActionBar(toolbar);
@@ -134,14 +136,9 @@ public class MainActivity extends AppCompatActivity {
     OnMoviesClickCallback callback = movie -> {
         Intent intent = new Intent(MainActivity.this, MovieActivity.class);
         intent.putExtra(MovieActivity.MOVIE_ID, movie.getId());
-        if (Build.VERSION.SDK_INT > 20) {
-            ActivityOptions options =
-                    ActivityOptions.makeSceneTransitionAnimation(MainActivity.this);
-            startActivity(intent, options.toBundle());
-        } else {
-            startActivity(intent);
-        }
-
+        ActivityOptions options =
+                ActivityOptions.makeSceneTransitionAnimation(MainActivity.this);
+        startActivity(intent, options.toBundle());
     };
 
     private void setTitle() {
@@ -165,85 +162,85 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-        private void showError () {
-            Toast.makeText(MainActivity.this, "Please check your internet connection.", Toast.LENGTH_SHORT).show();
-        }
+    private void showError() {
+        Toast.makeText(MainActivity.this, "Please check your internet connection.", Toast.LENGTH_SHORT).show();
+    }
 
-        @Override
-        public boolean onOptionsItemSelected (MenuItem item){
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+
+        //Inorder for ObjectAnimator to work the target needs to be cast to an ImageView - petekmunz.
+        ImageView sortImage = (ImageView) menu.findItem(R.id.sort).getActionView();
+        if (sortImage != null) {
+            sortImage.setImageResource(R.drawable.ic_sort);
+        }
+        //Since the target of the animation is now an ImageView, we use an onclick on the view &..
+        //..pass the target view as an argument to rotateMenu() -petekmunz.
+        sortImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                rotateMenu(view);
+                showSortMenu();
+            }
+        });
+        return true;
+    }
+
+    public void rotateMenu(View view) {
+        Animator animator = AnimatorInflater.loadAnimator(getApplicationContext(), R.animator.rotate);
+        animator.setTarget(view);
+        animator.start();
+    }
+
+
+    private void showSortMenu() {
+        PopupMenu sortMenu = new PopupMenu(this, findViewById(R.id.sort));
+        sortMenu.setOnMenuItemClickListener(item -> {
+            /*
+             * Every time we sort, we need to go back to page 1
+             */
+            currentPage = 1;
+
             switch (item.getItemId()) {
-                case R.id.sort:
-                    showSortMenu();
-                    rotateMenu();
+                case R.id.popular:
+                    sortBy = MoviesRepository.POPULAR;
+                    getMovies(currentPage);
+                    runAnimation();
+                    return true;
+                case R.id.top_rated:
+                    sortBy = MoviesRepository.TOP_RATED;
+                    getMovies(currentPage);
+                    runAnimation();
+                    return true;
+                case R.id.upcoming:
+                    sortBy = MoviesRepository.UPCOMING;
+                    getMovies(currentPage);
+                    runAnimation();
                     return true;
                 default:
-                    return super.onOptionsItemSelected(item);
+                    return false;
             }
-        }
-
-        public void rotateMenu () {
-            Animator animator = AnimatorInflater.loadAnimator(this, R.animator.rotate);
-            animator.setTarget(R.drawable.ic_sort);
-            animator.start();
-
-        }
-        @Override
-        public boolean onCreateOptionsMenu (Menu menu){
-            getMenuInflater().inflate(R.menu.menu, menu);
-
-            //Inorder for ObjectAnimator to work the target needs to be cast to an ImageView - petekmunz.
-            ImageView sortImage = (ImageView) menu.findItem(R.id.sort).getActionView();
-            if (sortImage != null) {
-                sortImage.setImageResource(R.drawable.ic_sort);
-            }
-            //Since the target of the animation is now an ImageView, we use an onclick on the view &..
-            //..pass the target view as an argument to rotateMenu() -petekmunz.
-            sortImage.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    rotateMenu(view);
-                    showSortMenu();
-                }
-            });
-            return true;
-        }
-
-        public void rotateMenu (View view){
-            Animator animator = AnimatorInflater.loadAnimator(getApplicationContext(), R.animator.rotate);
-            animator.setTarget(view);
-            animator.start();
-        }
-
-
-        private void showSortMenu () {
-            PopupMenu sortMenu = new PopupMenu(this, findViewById(R.id.sort));
-            sortMenu.setOnMenuItemClickListener(item -> {
-                /*
-                 * Every time we sort, we need to go back to page 1
-                 */
-                currentPage = 1;
-
-                switch (item.getItemId()) {
-                    case R.id.popular:
-                        sortBy = MoviesRepository.POPULAR;
-                        getMovies(currentPage);
-                        runAnimation();
-                        return true;
-                    case R.id.top_rated:
-                        sortBy = MoviesRepository.TOP_RATED;
-                        getMovies(currentPage);
-                        runAnimation();
-                        return true;
-                    case R.id.upcoming:
-                        sortBy = MoviesRepository.UPCOMING;
-                        getMovies(currentPage);
-                        runAnimation();
-                        return true;
-                    default:
-                        return false;
-                }
-            });
-            sortMenu.inflate(R.menu.menu_movies_sort);
-            sortMenu.show();
-        }
+        });
+        sortMenu.inflate(R.menu.menu_movies_sort);
+        sortMenu.show();
     }
+
+    private void setAnimation() {
+        //No need for sdk check since our app min sdk is 21 which will guarantee animation to always run -petekmunz.
+        Slide slide = new Slide();
+        slide.setSlideEdge(Gravity.START);
+        slide.setDuration(1300);
+        slide.setInterpolator(new DecelerateInterpolator());
+        getWindow().setEnterTransition(slide);
+    }
+
+    //Default onBack pressed conflicts with animation hence need for custom handling.
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+    }
+}
