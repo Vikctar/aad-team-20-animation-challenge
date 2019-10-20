@@ -1,8 +1,5 @@
 package com.alcpluralsight.aad_team20.models;
 
-
-
-
 import com.alcpluralsight.aad_team20.BuildConfig;
 import com.alcpluralsight.aad_team20.genres.GenresResponse;
 import com.alcpluralsight.aad_team20.genres.OnGetGenresCallback;
