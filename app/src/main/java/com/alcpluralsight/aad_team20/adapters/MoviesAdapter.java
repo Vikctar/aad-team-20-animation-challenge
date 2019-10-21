@@ -76,7 +76,6 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
         notifyDataSetChanged();
     }
 
-
     class MovieViewHolder extends RecyclerView.ViewHolder {
         TextView releaseDate;
         TextView title;

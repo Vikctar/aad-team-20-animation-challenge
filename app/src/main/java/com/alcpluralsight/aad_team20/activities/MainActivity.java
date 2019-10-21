@@ -1,6 +1,5 @@
 package com.alcpluralsight.aad_team20.activities;
 
-
 import android.animation.Animator;
 import android.animation.AnimatorInflater;
 import android.app.ActivityOptions;
@@ -33,6 +32,10 @@ import com.alcpluralsight.aad_team20.models.OnGetMoviesCallback;
 
 import java.util.List;
 
+/**
+ * Activity that fires up at the start of the program
+ * This activity is the LAUNCHER activity.
+ */
 public class MainActivity extends AppCompatActivity {
     private RecyclerView moviesList;
     private MoviesAdapter adapter;
@@ -43,7 +46,6 @@ public class MainActivity extends AppCompatActivity {
     private int currentPage = 1;
     private String sortBy = MoviesRepository.POPULAR;
     private Toolbar toolbar;
-
 
     private static final String TAG = "MainActivity";
     private int resId;
@@ -62,6 +64,11 @@ public class MainActivity extends AppCompatActivity {
         setupOnScrollListener();
     }
 
+    /**
+     * Does initial setup before the app actually fires up.
+     * Sets the layoutManager
+     * Binds the toolbar
+     */
     private void initializations() {
         moviesRepository = MoviesRepository.getInstance();
 
@@ -90,6 +97,10 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Gets all movie genres from moviesRepository and populates them in movieGenres if successful
+     * It shows an error on failure.
+     */
     private void getGenres() {
         moviesRepository.getGenres(new OnGetGenresCallback() {
             @Override
@@ -105,6 +116,12 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Gets a movie based on the page number of type [int].
+     * It appends a list of movies if adapter is not null and then plays an animation the page.
+     * On error it displays an error
+     * @param page of type [int]
+     */
     private void getMovies(int page) {
         isFetchingMovies = true;
 
@@ -156,14 +173,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void runAnimation() {
-        final LayoutAnimationController animationController = AnimationUtils.loadLayoutAnimation(getApplicationContext(), resId);
+        final LayoutAnimationController animationController =
+                AnimationUtils.loadLayoutAnimation(getApplicationContext(), resId);
         moviesList.setLayoutAnimation(animationController);
         moviesList.scheduleLayoutAnimation();
     }
 
-
+    /**
+     * Displays an error toast.
+     */
     private void showError() {
-        Toast.makeText(MainActivity.this, "Please check your internet connection.", Toast.LENGTH_SHORT).show();
+        Toast.makeText(MainActivity.this, "Please check your internet connection.",
+                Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -187,13 +208,20 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    /**
+     * Plays a rotate animation for the view param received.
+     * @param view of type [View]
+     */
     public void rotateMenu(View view) {
         Animator animator = AnimatorInflater.loadAnimator(getApplicationContext(), R.animator.rotate);
         animator.setTarget(view);
         animator.start();
     }
 
-
+    /**
+     * Displays the sort menu of type [PopupMenu].
+     * Resets the page to page 1, and displays an animation-based menu based on the item id.
+     */
     private void showSortMenu() {
         PopupMenu sortMenu = new PopupMenu(this, findViewById(R.id.sort));
         sortMenu.setOnMenuItemClickListener(item -> {

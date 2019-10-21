@@ -35,6 +35,9 @@ import com.bumptech.glide.request.RequestOptions;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Activity that handles all movie related logic.
+ */
 public class MovieActivity extends AppCompatActivity {
 
     public static String MOVIE_ID = "movie_id";
@@ -100,6 +103,11 @@ public class MovieActivity extends AppCompatActivity {
         trailersLabel = findViewById(R.id.trailersLabel);
     }
 
+    /**
+     * Callback that gets a movie based on the movieId of type [int].
+     * On success, it sets the title, overview, rating, releaseDate.
+     * On error it finishes the activity
+     */
     private void getMovie() {
         moviesRepository.getMovie(movieId, new OnGetMovieCallback() {
             @Override
@@ -127,6 +135,13 @@ public class MovieActivity extends AppCompatActivity {
             }
         });
     }
+
+    /**
+     * Callback that gets movie trailers based on the movie of type [Movie].
+     * On success, it sets the youtube thumbnail and plays the trailer youtube URL
+     * @param movie of type [Movie]
+     * On error it hides the trailer label on the UI
+     */
     private void getTrailers(Movie movie) {
         moviesRepository.getTrailers(movie.getId(), new OnGetTrailersCallback() {
             @Override
@@ -156,11 +171,22 @@ public class MovieActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Shows a trailer by starting up a new ACTION_VIEW Intent.
+     * @param url of type [String]
+     */
     private void showTrailer(String url) {
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
         startActivity(intent);
     }
 
+    /**
+     * Callback that gets movie reviews from moviesRepository based on the movie of type [Movie].
+     * On success, this method loops through all the reviews and sets an author and content and
+     * then adds them to the parent view.
+     * @param movie of type [Movie]
+     * On error it does nothing.
+     */
     private void getReviews(Movie movie) {
         moviesRepository.getReviews(movie.getId(), new OnGetReviewsCallback() {
             @Override
@@ -184,6 +210,12 @@ public class MovieActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Callback that gets genres reviews from moviesRepository based on the movie of type [Movie].
+     * On success, this method loops through all the genres and sets a list of movieGenres of type [List<Genre>]
+     * @param movie of type [Movie]
+     * On error it displays an error.
+     */
     private void getGenres(final Movie movie) {
         moviesRepository.getGenres(new OnGetGenresCallback() {
             @Override
@@ -211,6 +243,9 @@ public class MovieActivity extends AppCompatActivity {
         return true;
     }
 
+    /**
+     * Displays an error toast.
+     */
     private void showError() {
         Toast.makeText(MovieActivity.this, "Please check your internet connection.", Toast.LENGTH_SHORT).show();
     }
