@@ -50,7 +50,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
         holder.bind(movies.get(position));
         if (position > lastAnimatedPosition) {
             lastAnimatedPosition = position;
-            Animation animation = AnimationUtils.loadAnimation(context, R.anim.item_animation_right_left);
+            Animation animation = AnimationUtils.loadAnimation(context, R.anim.item_animation_fall_down);
             holder.container.setAnimation(animation);
             animation.start();
         }
@@ -71,11 +71,15 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
         movies.addAll(moviesToAppend);
         notifyDataSetChanged();
     }
-
     public void clearMovies() {
         movies.clear();
         notifyDataSetChanged();
     }
+
+    public Context getContext() {
+        return context;
+    }
+
 
     class MovieViewHolder extends RecyclerView.ViewHolder {
         TextView releaseDate;
@@ -109,7 +113,6 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
                     .apply(RequestOptions.placeholderOf(R.color.colorPrimary))
                     .into(poster);
         }
-
         private String getGenres(List<Integer> genreIds) {
             List<String> movieGenres = new ArrayList<>();
             for (Integer genreId : genreIds) {
@@ -123,9 +126,10 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
             return TextUtils.join(", ", movieGenres);
         }
 
-        public void clearAnimation() {
+        public void clearAnimation(){
             container.clearAnimation();
         }
+
 
     }
 }

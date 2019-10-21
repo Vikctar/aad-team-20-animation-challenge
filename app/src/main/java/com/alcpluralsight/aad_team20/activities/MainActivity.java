@@ -7,6 +7,7 @@ import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.transition.TransitionManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -67,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
         getGenres();
         resId = R.anim.layout_animation;
         setupOnScrollListener();
+
     }
 
     private void initializations() {
