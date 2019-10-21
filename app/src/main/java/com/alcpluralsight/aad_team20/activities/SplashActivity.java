@@ -22,6 +22,9 @@ import android.widget.TextView;
 
 import com.alcpluralsight.aad_team20.R;
 
+/**
+ * Activity that handles all splash related logic
+ */
 public class SplashActivity extends AppCompatActivity {
 
     private ConstraintLayout rootScene;
