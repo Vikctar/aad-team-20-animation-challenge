@@ -213,10 +213,10 @@ public class MainActivity extends AppCompatActivity {
      * @param view of type [View]
      */
     public void rotateMenu(View view) {
-            Animator animator = AnimatorInflater.loadAnimator(getApplicationContext(), R.animator.rotate);
-            animator.setTarget(view);
-            animator.start();
-        }
+        Animator animator = AnimatorInflater.loadAnimator(getApplicationContext(), R.animator.rotate);
+        animator.setTarget(view);
+        animator.start();
+    }
 
     /**
      * Displays the sort menu of type [PopupMenu].
