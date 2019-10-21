@@ -1,6 +1,5 @@
 package com.alcpluralsight.aad_team20.activities;
 
-
 import android.animation.Animator;
 import android.animation.AnimatorInflater;
 import android.app.ActivityOptions;
@@ -65,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Method that does initial setup before the app actually fires up.
+     * Does initial setup before the app actually fires up.
      * Sets the layoutManager
      * Binds the toolbar
      */
@@ -98,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Gets all movie genres from the API and populates them in movieGenres if successful
+     * Gets all movie genres from moviesRepository and populates them in movieGenres if successful
      * It shows an error on failure.
      */
     private void getGenres() {
@@ -173,14 +172,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void runAnimation() {
-        final LayoutAnimationController animationController = AnimationUtils.loadLayoutAnimation(getApplicationContext(), resId);
+        final LayoutAnimationController animationController =
+                AnimationUtils.loadLayoutAnimation(getApplicationContext(), resId);
         moviesList.setLayoutAnimation(animationController);
         moviesList.scheduleLayoutAnimation();
     }
 
 
     private void showError() {
-        Toast.makeText(MainActivity.this, "Please check your internet connection.", Toast.LENGTH_SHORT).show();
+        Toast.makeText(MainActivity.this, "Please check your internet connection.",
+                Toast.LENGTH_SHORT).show();
     }
 
     @Override
