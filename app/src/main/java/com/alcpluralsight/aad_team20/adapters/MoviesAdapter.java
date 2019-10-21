@@ -71,6 +71,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
         movies.addAll(moviesToAppend);
         notifyDataSetChanged();
     }
+
     public void clearMovies() {
         movies.clear();
         notifyDataSetChanged();
@@ -108,6 +109,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
                     .apply(RequestOptions.placeholderOf(R.color.colorPrimary))
                     .into(poster);
         }
+
         private String getGenres(List<Integer> genreIds) {
             List<String> movieGenres = new ArrayList<>();
             for (Integer genreId : genreIds) {
@@ -121,7 +123,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
             return TextUtils.join(", ", movieGenres);
         }
 
-        public void clearAnimation(){
+        public void clearAnimation() {
             container.clearAnimation();
         }
 

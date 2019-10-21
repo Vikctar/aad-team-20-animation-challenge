@@ -1,5 +1,6 @@
 package com.alcpluralsight.aad_team20.models;
 
+
 import com.alcpluralsight.aad_team20.BuildConfig;
 import com.alcpluralsight.aad_team20.genres.GenresResponse;
 import com.alcpluralsight.aad_team20.genres.OnGetGenresCallback;
@@ -67,45 +68,45 @@ public class MoviesRepository {
                 callback.onError();
             }
         };
-            switch (sortBy) {
-                case TOP_RATED:
-                    api.getTopRatedMovies(apiKey, LANGUAGE, page)
-                            .enqueue(call);
-                    break;
-                case UPCOMING:
-                    api.getUpcomingMovies(apiKey, LANGUAGE, page)
-                            .enqueue(call);
-                    break;
-                case POPULAR:
-                default:
-                    api.getPopularMovies(apiKey, LANGUAGE, page)
-                            .enqueue(call);
-                    break;
-            }
+        switch (sortBy) {
+            case TOP_RATED:
+                api.getTopRatedMovies(apiKey, LANGUAGE, page)
+                        .enqueue(call);
+                break;
+            case UPCOMING:
+                api.getUpcomingMovies(apiKey, LANGUAGE, page)
+                        .enqueue(call);
+                break;
+            case POPULAR:
+            default:
+                api.getPopularMovies(apiKey, LANGUAGE, page)
+                        .enqueue(call);
+                break;
+        }
     }
 
-    public void getGenres (final OnGetGenresCallback callback){
+    public void getGenres(final OnGetGenresCallback callback) {
         api.getGenres(apiKey, LANGUAGE)
-            .enqueue(new Callback<GenresResponse>() {
-                @Override
-                public void onResponse(Call<GenresResponse> call, Response<GenresResponse> response) {
-                    if (response.isSuccessful()) {
-                        GenresResponse genresResponse = response.body();
-                        if (genresResponse != null && genresResponse.getGenres() != null) {
-                            callback.onSuccess(genresResponse.getGenres());
+                .enqueue(new Callback<GenresResponse>() {
+                    @Override
+                    public void onResponse(Call<GenresResponse> call, Response<GenresResponse> response) {
+                        if (response.isSuccessful()) {
+                            GenresResponse genresResponse = response.body();
+                            if (genresResponse != null && genresResponse.getGenres() != null) {
+                                callback.onSuccess(genresResponse.getGenres());
+                            } else {
+                                callback.onError();
+                            }
                         } else {
                             callback.onError();
                         }
-                    } else {
+                    }
+
+                    @Override
+                    public void onFailure(Call<GenresResponse> call, Throwable t) {
                         callback.onError();
                     }
-                }
-
-                @Override
-                public void onFailure(Call<GenresResponse> call, Throwable t) {
-                    callback.onError();
-                }
-            });
+                });
     }
 
     public void getMovie(int movieId, final OnGetMovieCallback callback) {

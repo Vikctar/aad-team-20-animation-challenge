@@ -1,16 +1,16 @@
 package com.alcpluralsight.aad_team20.activities;
 
+
 import android.animation.Animator;
 import android.animation.AnimatorInflater;
 import android.app.ActivityOptions;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
-import android.transition.Slide;
-import android.view.Gravity;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationUtils;
-import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LayoutAnimationController;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
@@ -32,29 +32,34 @@ import com.alcpluralsight.aad_team20.models.OnGetMoviesCallback;
 
 import java.util.List;
 
-/**
- * Activity that fires up at the start of the program
- * This activity is the LAUNCHER activity.
- */
 public class MainActivity extends AppCompatActivity {
+    private static final String TAG = "MainActivity";
+    OnMoviesClickCallback callback = movie -> {
+        Intent intent = new Intent(MainActivity.this, MovieActivity.class);
+        intent.putExtra(MovieActivity.MOVIE_ID, movie.getId());
+        if (Build.VERSION.SDK_INT > 20) {
+            ActivityOptions options =
+                    ActivityOptions.makeSceneTransitionAnimation(MainActivity.this);
+            startActivity(intent, options.toBundle());
+        } else {
+            startActivity(intent);
+        }
+
+    };
     private RecyclerView moviesList;
     private MoviesAdapter adapter;
     private MoviesRepository moviesRepository;
-
     private List<Genre> movieGenres;
     private boolean isFetchingMovies;
     private int currentPage = 1;
     private String sortBy = MoviesRepository.POPULAR;
     private Toolbar toolbar;
-
-    private static final String TAG = "MainActivity";
     private int resId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        setAnimation();
 
         initializations();
         setSupportActionBar(toolbar);
@@ -64,11 +69,6 @@ public class MainActivity extends AppCompatActivity {
         setupOnScrollListener();
     }
 
-    /**
-     * Does initial setup before the app actually fires up.
-     * Sets the layoutManager
-     * Binds the toolbar
-     */
     private void initializations() {
         moviesRepository = MoviesRepository.getInstance();
 
@@ -97,10 +97,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    /**
-     * Gets all movie genres from moviesRepository and populates them in movieGenres if successful
-     * It shows an error on failure.
-     */
     private void getGenres() {
         moviesRepository.getGenres(new OnGetGenresCallback() {
             @Override
@@ -116,12 +112,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    /**
-     * Gets a movie based on the page number of type [int].
-     * It appends a list of movies if adapter is not null and then plays an animation the page.
-     * On error it displays an error
-     * @param page of type [int]
-     */
     private void getMovies(int page) {
         isFetchingMovies = true;
 
@@ -150,14 +140,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    OnMoviesClickCallback callback = movie -> {
-        Intent intent = new Intent(MainActivity.this, MovieActivity.class);
-        intent.putExtra(MovieActivity.MOVIE_ID, movie.getId());
-        ActivityOptions options =
-                ActivityOptions.makeSceneTransitionAnimation(MainActivity.this);
-        startActivity(intent, options.toBundle());
-    };
-
     private void setTitle() {
         switch (sortBy) {
             case MoviesRepository.POPULAR:
@@ -173,18 +155,33 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void runAnimation() {
-        final LayoutAnimationController animationController =
-                AnimationUtils.loadLayoutAnimation(getApplicationContext(), resId);
+        final LayoutAnimationController animationController = AnimationUtils.loadLayoutAnimation(getApplicationContext(), resId);
         moviesList.setLayoutAnimation(animationController);
         moviesList.scheduleLayoutAnimation();
     }
 
-    /**
-     * Displays an error toast.
-     */
+
     private void showError() {
-        Toast.makeText(MainActivity.this, "Please check your internet connection.",
-                Toast.LENGTH_SHORT).show();
+        Toast.makeText(MainActivity.this, "Please check your internet connection.", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.sort:
+                showSortMenu();
+                rotateMenu();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    public void rotateMenu() {
+        Animator animator = AnimatorInflater.loadAnimator(this, R.animator.rotate);
+        animator.setTarget(R.drawable.ic_sort);
+        animator.start();
+
     }
 
     @Override
@@ -208,20 +205,13 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    /**
-     * Plays a rotate animation for the view param received.
-     * @param view of type [View]
-     */
     public void rotateMenu(View view) {
         Animator animator = AnimatorInflater.loadAnimator(getApplicationContext(), R.animator.rotate);
         animator.setTarget(view);
         animator.start();
     }
 
-    /**
-     * Displays the sort menu of type [PopupMenu].
-     * Resets the page to page 1, and displays an animation-based menu based on the item id.
-     */
+
     private void showSortMenu() {
         PopupMenu sortMenu = new PopupMenu(this, findViewById(R.id.sort));
         sortMenu.setOnMenuItemClickListener(item -> {
@@ -252,23 +242,5 @@ public class MainActivity extends AppCompatActivity {
         });
         sortMenu.inflate(R.menu.menu_movies_sort);
         sortMenu.show();
-    }
-
-    private void setAnimation() {
-        //No need for sdk check since our app min sdk is 21 which will guarantee animation to always run -petekmunz.
-        Slide slide = new Slide();
-        slide.setSlideEdge(Gravity.START);
-        slide.setDuration(1300);
-        slide.setInterpolator(new DecelerateInterpolator());
-        getWindow().setEnterTransition(slide);
-    }
-
-    //Default onBack pressed conflicts with animation hence need for custom handling.
-    @Override
-    public void onBackPressed() {
-        Intent intent = new Intent(Intent.ACTION_MAIN);
-        intent.addCategory(Intent.CATEGORY_HOME);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
     }
 }

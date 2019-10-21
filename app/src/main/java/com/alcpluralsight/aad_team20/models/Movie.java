@@ -44,6 +44,7 @@ public class Movie {
     @Expose
     private String backdrop;
 
+
     public int getId() {
         return id;
     }
@@ -115,5 +116,6 @@ public class Movie {
     public void setGenres(List<Genre> genres) {
         this.genres = genres;
     }
+
 
 }
