@@ -16,7 +16,9 @@ Retrofit automatically serialises the JSON response using a POJO(Plain Old Java 
 
 ### showing the movies
 RecyclerView
+
 Master-deatil navigation
+
 Glide library for loading images
 
 ### Various animations are used in transitioning from one activity to another.
