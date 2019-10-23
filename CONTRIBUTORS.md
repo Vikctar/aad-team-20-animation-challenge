@@ -24,6 +24,8 @@
 
 * **[Kevin Langat](https://github.com/kevnlan)**
 
+* **[Purity Ngigi](https://github.com/ryseante)**
+
 * **[James Olumasayi](https://github.com/jimsanya)**
 
 * **[Wilson Owino Ochieng](https://github.com/wuodmwalimu)**
