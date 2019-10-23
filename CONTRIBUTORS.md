@@ -2,7 +2,7 @@
 
 * **[Sammy Mutahi Gicheru](https://github.com/sammymutahigicheru)**
 
-* **[Victor McDowell](https://github.com/ferecz)**
+* **[Victor McDowell](https://github.com/ferencz)**
 
 * **[Peter Munyao](https://github.com/petekmunz)**
 
